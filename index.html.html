@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora Shopee</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#EE4D2D" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Calc Shopee" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* =============================================
+       VARIÁVEIS DE COR — mude aqui se quiser
+    ============================================= */
+    :root {
+      --laranja: #EE4D2D;
+      --laranja-escuro: #C93B1E;
+      --laranja-suave: #fff2ef;
+      --texto: #1a1a1a;
+      --cinza: #888;
+      --linha: #e8e8e8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 40px rgba(238,77,45,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icone {
+      width: 38px;
+      height: 38px;
+      background: var(--laranja);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo-texto {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--texto);
+      line-height: 1.1;
+    }
+
+    .logo-texto span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--cinza);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--texto);
+      margin-bottom: 6px;
+    }
+
+    .subtitulo {
+      font-size: 13px;
+      color: var(--cinza);
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--texto);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .prefixo {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--cinza);
+      pointer-events: none;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 14px 14px 14px 36px;
+      border: 2px solid var(--linha);
+      border-radius: 12px;
+      font-size: 22px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--texto);
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    input[type="number"]:focus {
+      border-color: var(--laranja);
+    }
+
+    .taxas-info {
+      background: var(--laranja-suave);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .taxa-item {
+      flex: 1;
+    }
+
+    .taxa-label {
+      font-size: 11px;
+      color: var(--cinza);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .taxa-valor {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--laranja);
+    }
+
+    .taxa-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .taxa-prefix {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--laranja);
+    }
+
+    .taxa-input {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--laranja);
+      background: transparent;
+      border: none;
+      border-bottom: 2px dashed var(--laranja);
+      outline: none;
+      width: 60px;
+      padding: 2px 0;
+      appearance: textfield;
+    }
+
+    .taxa-input::-webkit-outer-spin-button,
+    .taxa-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .taxa-input:focus {
+      border-bottom-style: solid;
+    }
+
+    .salvo-msg {
+      font-size: 11px;
+      color: #38a169;
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: -4px;
+      height: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .salvo-msg.visivel { opacity: 1; }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: var(--laranja);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    button:hover { background: var(--laranja-escuro); }
+    button:active { transform: scale(0.98); }
+
+    .resultado {
+      margin-top: 24px;
+      border-top: 2px solid var(--linha);
+      padding-top: 24px;
+      display: none;
+    }
+
+    .resultado.visivel { display: block; }
+
+    .resultado-titulo {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--cinza);
+      margin-bottom: 16px;
+    }
+
+    .linha-resultado {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--linha);
+    }
+
+    .linha-resultado:last-child { border-bottom: none; }
+
+    .linha-resultado .nome {
+      font-size: 14px;
+      color: var(--cinza);
+    }
+
+    .linha-resultado .valor {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--texto);
+    }
+
+    .linha-resultado .valor.negativo { color: #e53e3e; }
+    .linha-resultado .valor.positivo { color: #38a169; font-size: 20px; }
+
+    .linha-resultado.destaque .nome {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--texto);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="logo">
+    <div class="logo-icone">🛒</div>
+    <div class="logo-texto">
+      Calculadora
+      <span>Shopee · Lucro líquido</span>
+    </div>
+  </div>
+
+  <h1>Quanto vou receber?</h1>
+  <p class="subtitulo">Digite o preço do produto e veja o valor líquido após as taxas.</p>
+
+  <label for="preco">Preço de venda</label>
+  <div class="input-wrapper">
+    <span class="prefixo">R$</span>
+    <input type="number" id="preco" placeholder="0,00" min="0" step="0.01" />
+  </div>
+
+  <div class="taxas-info">
+    <div class="taxa-item">
+      <div class="taxa-label">Taxa fixa</div>
+      <div class="taxa-input-wrapper">
+        <span class="taxa-prefix">R$</span>
+        <input class="taxa-input" type="number" id="input-taxa-fixa" min="0" step="0.01" placeholder="0,00" />
+      </div>
+    </div>
+    <div class="taxa-item">
+      <div class="taxa-label">Comissão</div>
+      <div class="taxa-input-wrapper">
+        <input class="taxa-input" type="number" id="input-comissao" min="0" step="0.1" placeholder="0" />
+        <span class="taxa-prefix">%</span>
+      </div>
+    </div>
+  </div>
+  <div class="salvo-msg" id="salvo-msg">✓ Valores salvos!</div>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="resultado" id="resultado">
+    <div class="resultado-titulo">Resumo</div>
+
+    <div class="linha-resultado">
+      <span class="nome">Preço de venda</span>
+      <span class="valor" id="res-bruto">—</span>
+    </div>
+    <div class="linha-resultado">
+      <span class="nome">Taxa fixa</span>
+      <span class="valor negativo" id="res-taxa-fixa">—</span>
+    </div>
+    <div class="linha-resultado">
+      <span class="nome">Comissão (<span id="res-pct">—</span>%)</span>
+      <span class="valor negativo" id="res-comissao">—</span>
+    </div>
+    <div class="linha-resultado destaque">
+      <span class="nome">💰 Você recebe</span>
+      <span class="valor positivo" id="res-liquido">—</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Valores padrão (usados na primeira vez que abrir)
+  const PADRAO_TAXA_FIXA       = 4;
+  const PADRAO_COMISSAO        = 20;
+
+  const inputTaxa     = document.getElementById('input-taxa-fixa');
+  const inputComissao = document.getElementById('input-comissao');
+  const salvoMsg      = document.getElementById('salvo-msg');
+
+  // Carrega valores salvos (ou usa o padrão)
+  inputTaxa.value     = localStorage.getItem('taxa_fixa')  ?? PADRAO_TAXA_FIXA;
+  inputComissao.value = localStorage.getItem('comissao')   ?? PADRAO_COMISSAO;
+
+  // Salva automaticamente quando o usuário muda qualquer campo
+  function salvarTaxas() {
+    localStorage.setItem('taxa_fixa', inputTaxa.value);
+    localStorage.setItem('comissao',  inputComissao.value);
+    salvoMsg.classList.add('visivel');
+    setTimeout(() => salvoMsg.classList.remove('visivel'), 2000);
+  }
+
+  inputTaxa.addEventListener('change', salvarTaxas);
+  inputComissao.addEventListener('change', salvarTaxas);
+
+  function formatar(valor) {
+    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+  }
+
+  function calcular() {
+    const bruto     = parseFloat(document.getElementById('preco').value);
+    const taxaFixa  = parseFloat(inputTaxa.value)     || 0;
+    const comissaoPct = parseFloat(inputComissao.value) || 0;
+
+    if (isNaN(bruto) || bruto <= 0) {
+      alert('Digite um valor válido!');
+      return;
+    }
+
+    const comissaoValor = bruto * (comissaoPct / 100);
+    const liquido       = bruto - taxaFixa - comissaoValor;
+
+    document.getElementById('res-bruto').textContent     = formatar(bruto);
+    document.getElementById('res-taxa-fixa').textContent = '- ' + formatar(taxaFixa);
+    document.getElementById('res-pct').textContent       = comissaoPct;
+    document.getElementById('res-comissao').textContent  = '- ' + formatar(comissaoValor);
+    document.getElementById('res-liquido').textContent   = formatar(liquido);
+
+    document.getElementById('resultado').classList.add('visivel');
+  }
+
+  document.getElementById('preco').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') calcular();
+  });
+
+  // Registra o Service Worker (necessário pro app funcionar offline)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+
+</body>
+</html>
